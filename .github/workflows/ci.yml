@@ -28,5 +28,5 @@ jobs:
         run: |
           ls -l
           docker -v
-          snap install docker
-          docker -v
+          docker build -t flask_app:1.0.0 .
+          docker images

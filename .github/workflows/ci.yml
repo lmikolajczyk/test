@@ -24,11 +24,14 @@ jobs:
       - uses: actions/checkout@v4
 
       # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: python3 --version && python --version
+      - name: Build the code
+        run: python --version && echo $?
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          ls -l
+          snap install docker -y
+          docker -v
+          
+        

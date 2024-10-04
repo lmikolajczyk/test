@@ -25,13 +25,13 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: Build the code
-        run: python --version && echo $?
+        run: python main.py && echo $?
 
       # Runs a set of commands using the runners shell
       - name: Run a multi-line script
         run: |
           ls -l
-          snap install docker -y
+          snap install docker
           docker -v
           
         

@@ -1,36 +1,32 @@
-# This is a basic workflow to help you get started with Actions
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
-
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
-      - name: Test
-        run: |
-          echo "Values: ${{  vars.REGISTRY_USERNAME }}"
 
+      # Check if secrets are available
+      - name: Test Secrets Output
+        run: |
+          echo "Registry Username: ${{ secrets.REGISTRY_USERNAME }}"
+          echo "Registry Password is set: $([[ -n '${{ secrets.REGISTRY_PASSWORD }}' ]] && echo 'Yes' || echo 'No')"
+
+      # Docker login step
       - uses: azure/docker-login@v2
         with:
           login-server: registry01poland.azurecr.io
-          username: ${{  vars.REGISTRY_USERNAME }}
-          password: ${{  vars.REGISTRY_PASSWORD }}
-      # Runs a single command using the runners shell
-      - name: Build the code
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+
+      # Build and push Docker image
+      - name: Build and push Docker image
         run: |
           docker build -t flask_app:${{ github.sha }} .
-          docker push flask_app:${{ github.sha }}
+          docker tag flask_app:${{ github.sha }} registry01poland.azurecr.io/flask_app:${{ github.sha }}
+          docker push registry01poland.azurecr.io/flask_app:${{ github.sha }}

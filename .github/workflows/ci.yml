@@ -20,6 +20,9 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v4
+      - name: Test
+        run: |
+          echo ${{ secrets.REGISTRY_USERNAME }}
 
       - uses: azure/docker-login@v2
         with:
